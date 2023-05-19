@@ -1,7 +1,6 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createObservation } from "../utils/api";
-import ErrorAlert from "../layout/ErrorAlert";
 
 function ObservationCreate() {
   const history = useHistory();
@@ -11,7 +10,6 @@ function ObservationCreate() {
     longitude: "",
     sky_condition: "",
   });
-  const [error, setError] = useState(null);
 
   function cancelHandler() {
     history.push("/");
@@ -19,14 +17,13 @@ function ObservationCreate() {
 
   function submitHandler(event) {
     event.preventDefault();
-   createObservation(observation)
-   .then(() =>{
-    history.push("/");
-   })
-   .catch(setError);
+    event.stopPropagation();
+    createObservation(observation).then(() => {
+      history.push("/");
+    });
   }
 
-  function changeHandler({ target: {name, value} }) {
+  function changeHandler({ target: { name, value } }) {
     setObservation((previousObservation) => ({
       ...previousObservation,
       [name]: value,
@@ -35,8 +32,7 @@ function ObservationCreate() {
 
   return (
     <main>
-       <h1 className="mb-3">Create Observation</h1>
-       <ErrorAlert error={error} />
+      <h1 className="mb-3">Create Observation</h1>
       <form onSubmit={submitHandler} className="mb-4">
         <div className="row mb-3">
           <div className="col-6 form-group">
@@ -54,7 +50,9 @@ function ObservationCreate() {
               onChange={changeHandler}
               required={true}
             />
-            <small className="form-text text-muted">Enter a value between -90 and 90.</small>
+            <small className="form-text text-muted">
+              Enter a value between -90 and 90.
+            </small>
           </div>
           <div className="col-6">
             <label className="form-label" htmlFor="longitude">
@@ -71,7 +69,9 @@ function ObservationCreate() {
               onChange={changeHandler}
               required={true}
             />
-            <small className="form-text text-muted">Enter a value between -180 and 180.</small>
+            <small className="form-text text-muted">
+              Enter a value between -180 and 180.
+            </small>
           </div>
         </div>
         <div className="mb-3">
